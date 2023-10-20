@@ -30,29 +30,20 @@ public class MockDataGenerator {
     public void init() {
         IntStream.range(0, 50)
                 .parallel()
-                .forEach(i -> {
-                            IndexRequest request = new IndexRequest();
-                            addCatalogToElasticsearch(request, (i + 1));
-                        }
-                );
+                .forEach(i -> addCatalogToElasticsearch((i + 1)));
+
         IntStream.range(0, 300000)
                 .parallel()
-                .forEach(i -> {
-                            IndexRequest request = new IndexRequest();
-                            addCustomerToElasticsearch(request);
-                        }
-                );
+                .forEach(i -> addCustomerToElasticsearch());
+
         IntStream.range(0, 1000000)
                 .parallel()
-                .forEach(i -> {
-                            IndexRequest request = new IndexRequest();
-                            addProductToElasticsearch(request);
-                        }
-                );
+                .forEach(i -> addProductToElasticsearch());
     }
 
-    public void addCatalogToElasticsearch(IndexRequest request, int i) {
+    public void addCatalogToElasticsearch(int i) {
         try {
+            IndexRequest request = new IndexRequest();
             Catalog catalog = Catalog.builder()
                     .id(String.valueOf(i))
                     .name(generateRandomFourLetterWord())
@@ -68,8 +59,9 @@ public class MockDataGenerator {
         }
     }
 
-    public void addProductToElasticsearch(IndexRequest request) {
+    public void addProductToElasticsearch() {
         try {
+            IndexRequest request = new IndexRequest();
             Product product = Product.builder()
                     .id(UUID.randomUUID().toString())
                     .name(UUID.randomUUID().toString())
@@ -88,8 +80,9 @@ public class MockDataGenerator {
         }
     }
 
-    public void addCustomerToElasticsearch(IndexRequest request) {
+    public void addCustomerToElasticsearch() {
         try {
+            IndexRequest request = new IndexRequest();
             Customer customer = Customer.builder()
                     .id(UUID.randomUUID().toString())
                     .firstName(UUID.randomUUID().toString())
