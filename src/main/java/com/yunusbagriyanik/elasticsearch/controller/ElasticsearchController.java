@@ -40,4 +40,9 @@ public class ElasticsearchController {
     public ResponseEntity<?> findCatalogsByPaginating(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
         return ResponseEntity.ok(elasticSearchService.findCatalogsByPaginating(page, size));
     }
+
+    @GetMapping("/searchCustByAddr")
+    public ResponseEntity<?> searchCustomerByAddr(@RequestParam String address) {
+        return ResponseEntity.ok(elasticSearchService.searchCustByAddr(address));
+    }
 }
