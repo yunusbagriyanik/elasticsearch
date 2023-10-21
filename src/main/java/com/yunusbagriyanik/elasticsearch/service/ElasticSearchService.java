@@ -60,6 +60,12 @@ public class ElasticSearchService {
         return catalogRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
+    /**
+     * searches for documents in the "customers" index based on a specific parameter within the address field.
+     *
+     * @param param the parameter to be used for the search query.
+     * @return list of search results for the address-based search.
+     */
     public List<SearchHit<Customer>> searchCustByAddr(String param) {
         final NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(matchQuery("address", param))
