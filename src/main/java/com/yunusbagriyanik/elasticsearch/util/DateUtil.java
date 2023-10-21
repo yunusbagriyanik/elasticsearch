@@ -13,8 +13,10 @@ import java.util.TimeZone;
 @UtilityClass
 public class DateUtil {
 
+    private final String DATE_FORMAT = "yyyyMMdd'T'HHmmss.SSSZ";
+
     public static String currentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         Date currentDate = new Date();
@@ -22,10 +24,10 @@ public class DateUtil {
     }
 
     public static String convertDateToFormattedString(String date) {
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.SSSZ");
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         Instant instant = OffsetDateTime.parse(date, inputFormatter).toInstant();
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.SSSZ");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.UTC);
 
         return outputFormatter.format(offsetDateTime);
