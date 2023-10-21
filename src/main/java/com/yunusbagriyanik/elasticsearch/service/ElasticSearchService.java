@@ -1,5 +1,6 @@
 package com.yunusbagriyanik.elasticsearch.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yunusbagriyanik.elasticsearch.entity.Catalog;
 import com.yunusbagriyanik.elasticsearch.entity.Customer;
 import com.yunusbagriyanik.elasticsearch.entity.Product;
@@ -8,6 +9,11 @@ import com.yunusbagriyanik.elasticsearch.repository.CustomerRepository;
 import com.yunusbagriyanik.elasticsearch.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -16,7 +22,9 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
@@ -29,6 +37,8 @@ public class ElasticSearchService {
     private final ProductRepository productRepository;
     private final CatalogRepository catalogRepository;
     private final ElasticsearchOperations elasticsearchOperations;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final RestHighLevelClient restHighLevelClient;
 
     public List<Customer> findCustomersByFirstName(String search) {
         return customerRepository.findCustomersByFirstName(search);
@@ -60,5 +70,29 @@ public class ElasticSearchService {
                 Customer.class,
                 IndexCoordinates.of("customers")
         ).getSearchHits();
+    }
+
+    public List<Customer> saveCustomers(List<Customer> customers) {
+        return customers.stream()
+                .map(this::addCustomerToElasticsearch)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    public Customer addCustomerToElasticsearch(Customer customer) {
+        try {
+            IndexRequest request = new IndexRequest();
+            request.id(customer.getId());
+            request.source(mapper.writeValueAsString(customer), XContentType.JSON);
+            request.index("customers");
+            IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
+            log.info("IndexResponse: {}", indexResponse);
+
+            return customer;
+        } catch (IOException e) {
+            log.error("Error: ", e);
+        }
+
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.yunusbagriyanik.elasticsearch.entity;
 
+import com.yunusbagriyanik.elasticsearch.util.DateUtil;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -22,4 +23,8 @@ public class Customer {
     private String address;
     @Field(name = "createdDate", type = FieldType.Date, format = DateFormat.basic_date_time)
     private String createdDate;
+
+    public String getCreatedDate() {
+        return DateUtil.convertDateToFormattedString(createdDate);
+    }
 }

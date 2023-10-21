@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yunusbagriyanik.elasticsearch.entity.Catalog;
 import com.yunusbagriyanik.elasticsearch.entity.Customer;
 import com.yunusbagriyanik.elasticsearch.entity.Product;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
@@ -15,8 +14,9 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -26,7 +26,7 @@ public class MockDataGenerator {
     private final RestHighLevelClient restHighLevelClient;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         IntStream.range(0, 50)
                 .parallel()
@@ -88,7 +88,7 @@ public class MockDataGenerator {
                     .firstName(UUID.randomUUID().toString())
                     .lastName(UUID.randomUUID().toString())
                     .address(UUID.randomUUID().toString())
-                    .createdDate(currentDate())
+                    .createdDate(DateUtil.currentDate())
                     .build();
             request.id(customer.getId());
             request.source(mapper.writeValueAsString(customer), XContentType.JSON);
@@ -98,14 +98,6 @@ public class MockDataGenerator {
         } catch (IOException e) {
             log.error("Error: ", e);
         }
-    }
-
-    public String currentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss.SSSZ");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Date currentDate = new Date();
-        return sdf.format(currentDate);
     }
 
     public List<String> generateRandomNumbersInRange(int min, int max, int count) {

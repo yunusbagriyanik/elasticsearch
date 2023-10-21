@@ -26,6 +26,11 @@ public class ElasticsearchController {
         return ResponseEntity.ok(elasticSearchService.findByFirstNameLikeOrLastNameLike(firstName, lastName));
     }
 
+    @PostMapping("/customers/save")
+    public ResponseEntity<List<Customer>> saveCustomers(@RequestBody List<Customer> customers) {
+        return ResponseEntity.ok(elasticSearchService.saveCustomers(customers));
+    }
+
     @GetMapping("/customers/page")
     public ResponseEntity<?> findCustomersByPaginating(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
         return ResponseEntity.ok(elasticSearchService.findCustomersByPaginating(page, size));
