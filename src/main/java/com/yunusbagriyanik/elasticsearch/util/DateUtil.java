@@ -22,9 +22,12 @@ public class DateUtil {
     }
 
     public static String convertDateToFormattedString(String date) {
-        Instant instant = Instant.parse(date);
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.SSSZ");
+        Instant instant = OffsetDateTime.parse(date, inputFormatter).toInstant();
+
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.SSSZ");
         OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.UTC);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.SSSZ");
-        return formatter.format(offsetDateTime);
+
+        return outputFormatter.format(offsetDateTime);
     }
 }
