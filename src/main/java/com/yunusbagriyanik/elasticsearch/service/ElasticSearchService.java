@@ -7,6 +7,7 @@ import com.yunusbagriyanik.elasticsearch.entity.Product;
 import com.yunusbagriyanik.elasticsearch.repository.CatalogRepository;
 import com.yunusbagriyanik.elasticsearch.repository.CustomerRepository;
 import com.yunusbagriyanik.elasticsearch.repository.ProductRepository;
+import com.yunusbagriyanik.elasticsearch.util.IndexEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
@@ -74,7 +75,7 @@ public class ElasticSearchService {
         return elasticsearchOperations.search(
                 searchQuery,
                 Customer.class,
-                IndexCoordinates.of("customers")
+                IndexCoordinates.of(IndexEnum.CUSTOMER.getIndexName())
         ).getSearchHits();
     }
 
@@ -90,7 +91,7 @@ public class ElasticSearchService {
             IndexRequest request = new IndexRequest();
             request.id(customer.getId());
             request.source(mapper.writeValueAsString(customer), XContentType.JSON);
-            request.index("customers");
+            request.index(IndexEnum.CUSTOMER.getIndexName());
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
             log.info("IndexResponse: {}", indexResponse);
 

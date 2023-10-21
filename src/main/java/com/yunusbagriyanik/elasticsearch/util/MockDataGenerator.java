@@ -50,7 +50,7 @@ public class MockDataGenerator {
                     .description(UUID.randomUUID().toString())
                     .build();
             request.source(mapper.writeValueAsString(catalog), XContentType.JSON);
-            request.index("catalogs");
+            request.index(IndexEnum.CATALOG.getIndexName());
             request.id(catalog.getId());
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
             log.info("IndexResponse: {}", indexResponse);
@@ -71,7 +71,7 @@ public class MockDataGenerator {
                     .catalogs(generateRandomNumbersInRange(1, 51))
                     .build();
             request.source(mapper.writeValueAsString(product), XContentType.JSON);
-            request.index("products");
+            request.index(IndexEnum.PRODUCT.getIndexName());
             request.id(product.getId());
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
             log.info("IndexResponse: {}", indexResponse);
@@ -92,7 +92,7 @@ public class MockDataGenerator {
                     .build();
             request.id(customer.getId());
             request.source(mapper.writeValueAsString(customer), XContentType.JSON);
-            request.index("customers");
+            request.index(IndexEnum.CUSTOMER.getIndexName());
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
             log.info("IndexResponse: {}", indexResponse);
         } catch (IOException e) {
