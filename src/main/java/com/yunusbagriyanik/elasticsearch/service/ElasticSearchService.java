@@ -79,6 +79,19 @@ public class ElasticSearchService {
         ).getSearchHits();
     }
 
+    public List<SearchHit<Customer>> searchCustomersByAddressWithMinShouldMatch(String param, String minShouldMatch) {
+        final NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(matchQuery("address", param)
+                        .minimumShouldMatch(minShouldMatch))
+                .build();
+
+        return elasticsearchOperations.search(
+                searchQuery, Customer.class,
+                IndexCoordinates.of(IndexEnum.CUSTOMER.getIndexName())
+        )
+                .getSearchHits();
+    }
+
     public List<Customer> saveCustomers(List<Customer> customers) {
         return customers.stream()
                 .map(this::addCustomerToElasticsearch)

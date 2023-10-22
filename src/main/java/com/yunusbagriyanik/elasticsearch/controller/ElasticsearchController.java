@@ -50,4 +50,9 @@ public class ElasticsearchController {
     public ResponseEntity<?> searchCustomerByAddr(@RequestParam String address) {
         return ResponseEntity.ok(elasticSearchService.searchCustByAddr(address));
     }
+
+    @GetMapping("/searchCustByAddrWithMinShouldMatch")
+    public ResponseEntity<?> searchCustomersByAddressWithMinShouldMatch(@RequestParam String address) {
+        return ResponseEntity.ok(elasticSearchService.searchCustomersByAddressWithMinShouldMatch(address, "4%"));
+    }
 }
